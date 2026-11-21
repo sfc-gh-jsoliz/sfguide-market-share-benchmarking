@@ -1,0 +1,7 @@
+/* Design tokens from docs/DESIGN.md, shared by the guide and the hosted example. */
+:root{--rail:#241B17;--rail2:#33271F;--railInk:#F4EEE9;--railMuted:#BFAFA4;--canvas:#FAF7F3;--surface:#fff;--surface2:#F2ECE6;--line:#E4DAD1;--ink:#231C18;--ink2:#4A3F38;--muted:#6E6158;--brand:#B0287F;--brandDeep:#921F69;--brandSoft:#F8E3F0;--ochre:#E0A33A;--ochreInk:#7A4C05;--ochreSoft:#FBEFD8;--market:#5B6B7A;--gain:#1D7A46;--gainSoft:#E1F2E7;--loss:#B3261E;--lossSoft:#FBE5E2;
+--sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+*,*::before,*::after{box-sizing:border-box}
+html{overflow-x:clip;-webkit-text-size-adjust:100%}
+body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--canvas);line-height:1.5}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:4px}

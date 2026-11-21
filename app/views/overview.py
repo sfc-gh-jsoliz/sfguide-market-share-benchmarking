@@ -69,7 +69,7 @@ def render(mode):
         f'<div class="ms-insight"><b>{brand.esc(top.category_name)}</b> added the most share '
         f'({top.share_change_bps:+.1f} bps, growing {top.book_yoy_pct:+.1f}% against a market at {top.market_yoy_pct:+.1f}%). '
         f'<b>{brand.esc(bot.category_name)}</b> gave back {abs(bot.share_change_bps):.1f} bps: our book fell '
-        f'{bot.book_yoy_pct:.1f}% while the market grew {bot.market_yoy_pct:+.1f}%.</div>', unsafe_allow_html=True)
+        f'{abs(bot.book_yoy_pct):.1f}% while the market grew {bot.market_yoy_pct:+.1f}%.</div>', unsafe_allow_html=True)
 
     c1, c2 = st.columns([1.55, 1], gap="medium")
     with c1:
