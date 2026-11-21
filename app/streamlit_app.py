@@ -17,7 +17,7 @@ from views import ask, growth, notes, overview, verticals  # noqa: E402
 from views.common import theme  # noqa: E402
 
 st.set_page_config(page_title="Market Share & Vertical Benchmarking", page_icon="◔", layout="wide",
-                   initial_sidebar_state="expanded")
+                   initial_sidebar_state="auto")
 st.markdown(brand.CSS, unsafe_allow_html=True)
 theme()
 
