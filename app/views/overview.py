@@ -17,6 +17,15 @@ def ribbon(summ):
                  {"vertical": r.category_name, "short": short, "point": "Apr–Jun 2026", "x": 1, "bps": r.share_now_bps,
                   "status": r.status, "change": r.share_change_bps}]
     d = pd.DataFrame(rows)
+    # Nudge end labels apart (about 6 bps is one label height at this chart size).
+    d["ly"] = d["bps"]
+    for x in (0, 1):
+        idx = d[d.x == x].sort_values("bps").index
+        prev = None
+        for i in idx:
+            if prev is not None and d.at[i, "ly"] - prev < 6:
+                d.at[i, "ly"] = prev + 6
+            prev = d.at[i, "ly"]
     base = alt.Chart(d).encode(
         x=alt.X("point:N", sort=["Jul–Sep 2024", "Apr–Jun 2026"], title=None,
                 axis=alt.Axis(labelAngle=0, labelFontWeight=700, labelColor=brand.T["ink2"], domain=False, ticks=False)),
@@ -31,9 +40,9 @@ def ribbon(summ):
         strokeWidth=alt.condition("datum.status == 'Gaining'", alt.value(3.2), alt.value(2)),
         strokeDash=alt.condition("datum.status == 'Losing'", alt.value([5, 3]), alt.value([1, 0])))
     lab_r = base.transform_filter("datum.x == 1").mark_text(align="left", dx=9, fontSize=11, fontWeight=700).encode(
-        text=alt.Text("label:N")).transform_calculate(label="datum.short + '  ' + format(datum.bps, '.0f')")
+        y="ly:Q", text=alt.Text("label:N")).transform_calculate(label="datum.short + '  ' + format(datum.bps, '.0f')")
     lab_l = base.transform_filter("datum.x == 0").mark_text(align="right", dx=-9, fontSize=11).encode(
-        text=alt.Text("bps:Q", format=".0f"))
+        y="ly:Q", text=alt.Text("bps:Q", format=".0f"))
     return (lines + lab_r + lab_l).properties(height=330, padding={"left": 10, "right": 110, "top": 8, "bottom": 4})
 
 
@@ -53,23 +62,23 @@ def render(mode):
     wide = summ.loc[summ.growth_gap_pp.abs().idxmax()]
     vol_yoy = now.processed_volume_usd / yr.processed_volume_usd - 1
     kpis = "".join([
-        brand.kpi("Book share of market", f"{n3:.1f}<small>bps</small>",
-                  brand.arrow(n3 - s3, f"{n3 - s3:+.1f} bps vs Jul–Sep 2024"), list(p.bps.round(2))),
+        brand.kpi("Book share of market", f"{brand.n(n3, 1)}<small>bps</small>",
+                  brand.arrow(n3 - s3, f"{brand.n(n3 - s3, 1, True)} bps vs Jul–Sep 2024"), list(p.bps.round(2))),
         brand.kpi(f"Processed · {latest:%b %Y}", f"{brand.usd(now.processed_volume_usd)}",
-                  brand.arrow(vol_yoy, f"{vol_yoy * 100:+.1f}% year over year"), list(p.processed_volume_usd / 1e9), "#5B6B7A"),
+                  brand.arrow(vol_yoy, f"{brand.n(vol_yoy * 100, 1, True)}% year over year"), list(p.processed_volume_usd / 1e9), "#5B6B7A"),
         brand.kpi("Verticals gaining share", brand.counter(gaining, f" of {len(summ)}"),
                   f'{int((summ.status == "Holding").sum())} holding · {int((summ.status == "Losing").sum())} losing'),
-        brand.kpi("Widest growth gap", f"{wide.growth_gap_pp:+.1f}<small>pp</small>",
-                  f"{brand.esc(brand.SHORT[wide.category_name])}: book {wide.book_yoy_pct:+.1f}% vs market {wide.market_yoy_pct:+.1f}%"),
+        brand.kpi("Widest growth gap", f"{brand.n(wide.growth_gap_pp, 1, True)}<small>pp</small>",
+                  f"{brand.esc(brand.SHORT[wide.category_name])}: book {brand.n(wide.book_yoy_pct, 1, True)}% vs market {brand.n(wide.market_yoy_pct, 1, True)}%"),
     ])
     st.markdown(f'<div class="ms-kpis">{kpis}</div>', unsafe_allow_html=True)
 
     top, bot = summ.iloc[0], summ.iloc[-1]
     st.markdown(
         f'<div class="ms-insight"><b>{brand.esc(top.category_name)}</b> added the most share '
-        f'({top.share_change_bps:+.1f} bps, growing {top.book_yoy_pct:+.1f}% against a market at {top.market_yoy_pct:+.1f}%). '
-        f'<b>{brand.esc(bot.category_name)}</b> gave back {abs(bot.share_change_bps):.1f} bps: our book fell '
-        f'{abs(bot.book_yoy_pct):.1f}% while the market grew {bot.market_yoy_pct:+.1f}%.</div>', unsafe_allow_html=True)
+        f'({brand.n(top.share_change_bps, 1, True)} bps, growing {brand.n(top.book_yoy_pct, 1, True)}% against a market at {brand.n(top.market_yoy_pct, 1, True)}%). '
+        f'<b>{brand.esc(bot.category_name)}</b> gave back {brand.n(abs(bot.share_change_bps), 1)} bps: our book fell '
+        f'{brand.n(abs(bot.book_yoy_pct), 1)}% while the market grew {brand.n(bot.market_yoy_pct, 1, True)}%.</div>', unsafe_allow_html=True)
 
     c1, c2 = st.columns([1.55, 1], gap="medium")
     with c1:
@@ -87,7 +96,7 @@ def render(mode):
                 col = brand.T["gain"] if r.share_change_bps >= 0 else brand.T["loss"]
                 items.append(
                     f'<li><span class="nm">{brand.esc(r.category_name)} {brand.pill(r.status)}</span>'
-                    f'<span class="n {"up" if r.share_change_bps >= 0 else "down"}">{r.share_change_bps:+.1f}</span>'
-                    f'<span class="bar"><b></b><i style="left:{left:.1f}%;width:{w:.1f}%;background:{col}"></i></span></li>')
+                    f'<span class="n {"up" if r.share_change_bps >= 0 else "down"}">{brand.n(r.share_change_bps, 1, True)}</span>'
+                    f'<span class="bar"><b></b><i style="left:{brand.n(left, 1)}%;width:{brand.n(w, 1)}%;background:{col}"></i></span></li>')
             st.markdown(f'<ul class="ms-rank">{"".join(items)}</ul>', unsafe_allow_html=True)
             st.markdown(f'<p class="ms-card-s" style="margin-top:.7rem">Gaining at +3% share change or more, losing at −3% or less. Latest month {latest:%B %Y}.</p>', unsafe_allow_html=True)

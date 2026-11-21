@@ -163,10 +163,18 @@ def esc(s):
 def usd(x, d=1):
     x = float(x)
     if abs(x) >= 1e9:
-        return f"${x / 1e9:.{d + 1}f}B"
+        return f"${n(x / 1e9, d + 1)}B"
     if abs(x) >= 1e6:
-        return f"${x / 1e6:.{d}f}M"
+        return f"${n(x / 1e6, d)}M"
     return f"${x:,.0f}"
+
+
+def n(x, d=1, sign=False):
+    """Format like Snowflake TO_CHAR / JavaScript toFixed: round half away from zero."""
+    from decimal import ROUND_HALF_UP, Decimal
+    q = Decimal(repr(float(x))).quantize(Decimal(1).scaleb(-d), rounding=ROUND_HALF_UP)
+    s = f"{q:,.{d}f}" if abs(q) >= 1000 else f"{q:.{d}f}"
+    return ("+" + s) if sign and q >= 0 else s
 
 
 def signed(x, d=1, unit=""):

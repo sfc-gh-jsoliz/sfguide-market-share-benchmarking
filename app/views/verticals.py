@@ -12,8 +12,8 @@ def detail(df, row):
     color = brand.CAT_COLORS[row.category_name]
     st.markdown(
         f'<p class="ms-card-h">{brand.esc(row.category_name)} {brand.pill(row.status)}</p>'
-        f'<p class="ms-card-s">Share {row.share_start_bps:.1f} → {row.share_now_bps:.1f} bps ({row.share_change_bps:+.1f} bps, {row.share_change_pct:+.1f}%) · '
-        f'latest growth gap {row.growth_gap_pp:+.1f} pp · {int(row.active_merchants)} active merchants</p>', unsafe_allow_html=True)
+        f'<p class="ms-card-s">Share {brand.n(row.share_start_bps, 1)} → {brand.n(row.share_now_bps, 1)} bps ({brand.n(row.share_change_bps, 1, True)} bps, {brand.n(row.share_change_pct, 1, True)}%) · '
+        f'latest growth gap {brand.n(row.growth_gap_pp, 1, True)} pp · {int(row.active_merchants)} active merchants</p>', unsafe_allow_html=True)
     share = alt.Chart(g).mark_line(color=color, strokeWidth=2.4, point=alt.OverlayMarkDef(size=26, color=color)).encode(
         x=alt.X("month:T", title=None, axis=alt.Axis(format="%b %y", labelAngle=0, tickCount=8)),
         y=alt.Y("share_bps:Q", title="Share (bps)", scale=alt.Scale(zero=False)),
@@ -43,16 +43,18 @@ def detail(df, row):
         st.markdown('<p class="ms-card-s"><b>Growth</b>: our volume vs the market, indexed</p>', unsafe_allow_html=True)
         st.altair_chart(vol, use_container_width=True)
     t = g.sort_values("month", ascending=False)[["month_end", "processed_volume_usd", "market_sales_usd", "share_bps",
-                                                 "book_yoy_pct", "market_yoy_pct", "growth_gap_pp", "txn_count"]]
+                                                 "book_yoy_pct", "market_yoy_pct", "growth_gap_pp", "txn_count"]].copy()
+    t["processed_volume_usd"] = t.processed_volume_usd / 1e6
+    t["market_sales_usd"] = t.market_sales_usd / 1e9
     st.dataframe(t, hide_index=True, use_container_width=True, height=240, column_config={
         "month_end": "Month end",
-        "processed_volume_usd": st.column_config.NumberColumn("Processed", format="$%,.0f"),
-        "market_sales_usd": st.column_config.NumberColumn("Market sales", format="$%,.0f"),
+        "processed_volume_usd": st.column_config.NumberColumn("Processed ($M)", format="$%.1fM"),
+        "market_sales_usd": st.column_config.NumberColumn("Market sales ($B)", format="$%.2fB"),
         "share_bps": st.column_config.NumberColumn("Share (bps)", format="%.2f"),
         "book_yoy_pct": st.column_config.NumberColumn("Book YoY %", format="%+.2f"),
         "market_yoy_pct": st.column_config.NumberColumn("Market YoY %", format="%+.2f"),
         "growth_gap_pp": st.column_config.NumberColumn("Gap (pp)", format="%+.2f"),
-        "txn_count": st.column_config.NumberColumn("Transactions", format="%,d"),
+        "txn_count": st.column_config.NumberColumn("Transactions", format="localized"),
     })
 
 
@@ -74,6 +76,8 @@ def render(mode):
         t = t[t.category_name.str.lower().str.contains(ql) | t.category_code.str.lower().str.contains(ql)]
     shown = t[["category_name", "status", "share_now_bps", "share_change_bps", "processed_latest_usd",
                "market_latest_usd", "book_yoy_pct", "market_yoy_pct", "growth_gap_pp", "category_code"]].reset_index(drop=True)
+    shown["processed_latest_usd"] = shown.processed_latest_usd / 1e6
+    shown["market_latest_usd"] = shown.market_latest_usd / 1e9
     shown["status"] = shown.status.map({"Gaining": "▲ Gaining", "Holding": "● Holding", "Losing": "▼ Losing"})
     with st.container(key="card_table"):
         if shown.empty:
@@ -88,8 +92,8 @@ def render(mode):
                 "status": "Status",
                 "share_now_bps": st.column_config.ProgressColumn("Share now (bps)", format="%.1f", min_value=0, max_value=260),
                 "share_change_bps": st.column_config.NumberColumn("Change (bps)", format="%+.1f"),
-                "processed_latest_usd": st.column_config.NumberColumn("Processed, latest", format="$%,.0f"),
-                "market_latest_usd": st.column_config.NumberColumn("Market, latest", format="$%,.0f"),
+                "processed_latest_usd": st.column_config.NumberColumn("Processed, latest ($M)", format="$%.1fM"),
+                "market_latest_usd": st.column_config.NumberColumn("Market, latest ($B)", format="$%.2fB"),
                 "book_yoy_pct": st.column_config.NumberColumn("Book YoY %", format="%+.1f"),
                 "market_yoy_pct": st.column_config.NumberColumn("Market YoY %", format="%+.1f"),
                 "growth_gap_pp": st.column_config.NumberColumn("Growth gap (pp)", format="%+.1f"),

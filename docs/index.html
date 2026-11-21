@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Market Share &amp; Vertical Benchmarking · a Snowflake guide</title>
+<meta name="description" content="See where a payments processor is gaining or losing share by merchant vertical: processed volume against market retail sales, in basis points, with an AI share note that is fact-checked before anyone reads it.">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <nav class="top" aria-label="Site">
+      <a class="mark" href="./"><img src="assets/logo.svg" width="32" height="32" alt=""><span>Market Share &amp; Vertical Benchmarking</span></a>
+      <span class="links"><a href="#how">How it works</a><a href="#run">Run it</a><a href="https://github.com/sfc-gh-jsoliz/sfguide-market-share-benchmarking">Repository</a></span>
+    </nav>
+    <div class="heroGrid">
+      <div class="heroText">
+        <p class="eyebrow">Payments · Strategy · Snowflake guide</p>
+        <h1>Your book is growing. Is it growing faster than the market?</h1>
+        <p class="lede">Processed volume alone can't tell a processor whether it is winning a vertical. This example sets your volume by merchant category against market retail sales, shows share in basis points and the year-over-year growth gap, and writes a share note that a second AI pass checks figure by figure.</p>
+        <div class="cta"><a class="btn primary" href="try/">Try it, no account</a><a class="btn ghost" href="https://github.com/sfc-gh-jsoliz/sfguide-market-share-benchmarking">View the repository</a></div>
+        <ul class="facts"><li><b>~15 s</b> setup on an XSMALL warehouse</li><li><b>6</b> verticals · <b>24</b> months</li><li><b>Synthetic</b> data, seeded</li></ul>
+      </div>
+      <figure class="heroChart">
+        <svg class="ribbon" viewBox="0 0 560 330" role="img" aria-labelledby="rbt"><title id="rbt">Share ribbon: share of market in basis points per vertical, Jul to Sep 2024 against Apr to Jun 2026. Restaurants rises from 221 to 243, Electronics falls from 179 to 157.</title><text x="120" y="18" text-anchor="middle" class="ax">Jul–Sep 2024</text><text x="440" y="18" text-anchor="middle" class="ax">Apr–Jun 2026</text><line x1="120" x2="120" y1="36" y2="312" class="rl"/><line x1="440" x2="440" y1="36" y2="312" class="rl"/><line x1="120" y1="94.8" x2="440" y2="50.0" stroke="#E05BB4" stroke-width="3.4" stroke-linecap="round"/><circle cx="120" cy="94.8" r="4" fill="#E05BB4"/><circle cx="440" cy="50.0" r="5" fill="#E05BB4"/><text x="450" y="54.0" fill="#E05BB4" class="lb">Restaurants 243</text><text x="110" y="98.8" text-anchor="end" class="lt">Restaurants 221</text><line x1="120" y1="215.2" x2="440" y2="208.7" stroke="#E0A33A" stroke-width="2" stroke-linecap="round"/><circle cx="120" cy="215.2" r="4" fill="#E0A33A"/><circle cx="440" cy="208.7" r="5" fill="#E0A33A"/><text x="450" y="212.7" fill="#E0A33A" class="lb">Furniture 164</text><text x="110" y="219.2" text-anchor="end" class="lt">Furniture 160</text><line x1="120" y1="177.3" x2="440" y2="221.0" stroke="#F07A6E" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 4"/><circle cx="120" cy="177.3" r="4" fill="#F07A6E"/><circle cx="440" cy="221.0" r="5" fill="#F07A6E"/><text x="450" y="226.7" fill="#F07A6E" class="lb">Electronics 157</text><text x="110" y="181.3" text-anchor="end" class="lt">Electronics 179</text><line x1="120" y1="236.8" x2="440" y2="242.8" stroke="#B9A2E8" stroke-width="2" stroke-linecap="round"/><circle cx="120" cy="236.8" r="4" fill="#B9A2E8"/><circle cx="440" cy="242.8" r="5" fill="#B9A2E8"/><text x="450" y="246.8" fill="#B9A2E8" class="lb">Apparel 147</text><text x="110" y="240.8" text-anchor="end" class="lt">Apparel 150</text><line x1="120" y1="256.5" x2="440" y2="244.4" stroke="#7FB4E3" stroke-width="3.4" stroke-linecap="round"/><circle cx="120" cy="256.5" r="4" fill="#7FB4E3"/><circle cx="440" cy="244.4" r="5" fill="#7FB4E3"/><text x="450" y="260.8" fill="#7FB4E3" class="lb">Health 146</text><text x="110" y="260.5" text-anchor="end" class="lt">Health 140</text><line x1="120" y1="296.1" x2="440" y2="286.3" stroke="#6FCB96" stroke-width="3.4" stroke-linecap="round"/><circle cx="120" cy="296.1" r="4" fill="#6FCB96"/><circle cx="440" cy="286.3" r="5" fill="#6FCB96"/><text x="450" y="290.3" fill="#6FCB96" class="lb">Grocery 125</text><text x="110" y="300.1" text-anchor="end" class="lt">Grocery 120</text></svg>
+        <figcaption>The share ribbon on this synthetic data set: Restaurants gains 22 bps, Electronics gives back 22. Thick lines gain, dashed lines lose.</figcaption>
+      </figure>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="wrap scenario">
+    <h2>The problem</h2>
+    <p>A strategy team at a payments processor sees its restaurant volume up 11% on the year. Good news, until the team asks how fast the restaurant market grew. Internal dashboards show your own trend, not your share of the market, so a vertical can look healthy while you lose ground in it. Here the Electronics book shrinks 5% while its market grows 2%: a share loss that a volume chart hides.</p>
+  </section>
+
+  <section class="wrap" id="how">
+    <h2>How it works</h2>
+    <ol class="flow">
+      <li><span>1</span><h3>Benchmark view</h3><p>A Snowflake view joins processed volume to market sales by category and month: <code>share_bps = volume / market &times; 10,000</code>, plus year-over-year growth of each and the gap between them.</p></li>
+      <li><span>2</span><h3>Semantic view</h3><p><code>MARKET_SHARE_SV</code> gives the benchmark business names and metrics, so Cortex Analyst can turn a plain-English question into SQL.</p></li>
+      <li><span>3</span><h3>Grounded draft</h3><p>Cortex <code>AI_COMPLETE</code> writes a share note from a fact pack of pre-formatted figures under strict rules: copy figures, no estimates, no outside numbers.</p></li>
+      <li><span>4</span><h3>Verifier</h3><p>A second <code>AI_COMPLETE</code> pass compares every figure with the fact pack and marks the note Verified or Needs review, with the claims it flagged.</p></li>
+    </ol>
+  </section>
+
+  <section class="wrap" id="screens">
+    <h2>What you get</h2>
+    <div class="shots">
+      <figure class="wide"><img src="images/01-overview.png" width="1440" height="900" loading="lazy" alt="Overview screen: four KPI tiles (book share 175.5 bps, processed volume $5.00B in June 2026, 3 of 6 verticals gaining share, widest growth gap -7.7 pp), the share ribbon slope chart and a ranked gainers and losers list"><figcaption><b>Overview.</b> KPIs, the share ribbon and gainers and losers, read in Live mode from the <code>MARKET_SHARE_VERTICAL_SUMMARY</code> view.</figcaption></figure>
+      <figure><img src="images/02-verticals.png" width="1440" height="900" loading="lazy" alt="Verticals screen: a sortable table of six verticals with status, share now, change, processed and market volume and growth gap, and below it the Restaurants detail with monthly share and indexed growth charts"><figcaption><b>Verticals.</b> Sort, filter and open any vertical; figures come from the <code>MARKET_SHARE_BENCHMARK</code> view.</figcaption></figure>
+      <figure><img src="images/03-growth-gap.png" width="1440" height="900" loading="lazy" alt="Growth gap screen: diverging bars of the June 2026 growth gap per vertical, from Restaurants +6.5 pp to Electronics -7.7 pp, a four-box read-out and a monthly growth-gap line chart"><figcaption><b>Growth gap.</b> Our year-over-year growth minus the market's, computed with window functions in the benchmark view.</figcaption></figure>
+      <figure><img src="images/04-share-note.png" width="1440" height="900" loading="lazy" alt="Share notes screen in Live mode: completed progress steps, a Verified badge, and an AI-written note with a table of the six verticals"><figcaption><b>Share notes.</b> Cortex <code>AI_COMPLETE</code> drafts the note and a second pass verifies it; notes are saved to <code>MARKET_SHARE_REPORTS</code>.</figcaption></figure>
+      <figure><img src="images/05-ask-an-analyst.png" width="1440" height="900" loading="lazy" alt="Ask an analyst screen in Live mode: suggested questions, completed progress steps and the agent's answer that Electronics and Appliances had the widest negative growth gap, -7.67 pp, with its result table"><figcaption><b>Ask an analyst.</b> A Cortex Agent uses Cortex Analyst over the semantic view; the answer shows its SQL and result rows.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="wrap" id="caps">
+    <h2>Snowflake capabilities used</h2>
+    <div class="tw"><table>
+      <thead><tr><th>Capability</th><th>Where</th><th>What it does here</th></tr></thead>
+      <tbody>
+        <tr><td>Views and window functions</td><td>Overview, Verticals, Growth gap</td><td><code>MARKET_SHARE_BENCHMARK</code> computes share in bps and <code>LAG</code>-based YoY growth; <code>MARKET_SHARE_VERTICAL_SUMMARY</code> sets each vertical's status.</td></tr>
+        <tr><td>Semantic views</td><td>Ask an analyst</td><td><code>MARKET_SHARE_SV</code> defines facts, dimensions and metrics over the benchmark.</td></tr>
+        <tr><td>Cortex Analyst + Cortex Agents</td><td>Ask an analyst</td><td><code>MARKET_SHARE_AGENT</code>, called with <code>DATA_AGENT_RUN</code>, writes and runs SQL over the semantic view (14 to 26 s per question, measured).</td></tr>
+        <tr><td>Cortex <code>AI_COMPLETE</code></td><td>Share notes</td><td>Drafts the note, then verifies it (6 to 12 s for both calls, measured).</td></tr>
+        <tr><td>Streamlit in Snowflake</td><td>The app</td><td>The same Streamlit app runs locally with key-pair auth or inside Snowflake.</td></tr>
+        <tr><td>Marketplace listing (optional)</td><td><code>sql/setup_census.sql</code></td><td>Swaps the synthetic market for US Census Advance Retail Sales from a free listing. Not re-verified in this build.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="wrap two" id="run">
+    <div class="card">
+      <h2>Try it, no account</h2>
+      <p>The <a href="try/">hosted example</a> runs in your browser on the bundled synthetic data. AI responses are replayed from Live runs and labeled <em>Sample AI response</em>. Locally: <code>pip install -r app/requirements.txt</code>, then <code>streamlit run app/streamlit_app.py</code>.</p>
+    </div>
+    <div class="card">
+      <h2>Run it live</h2>
+      <p>Needs a role that can create a database, warehouse and role, in a region with Cortex <code>AI_COMPLETE</code> and Cortex Agents. Run <code>sql/setup.sql</code> (about 15 s, well under 0.1 warehouse credit on XSMALL), then start the app with key-pair auth or deploy it as Streamlit in Snowflake. Each share note and each question adds Cortex token charges. Remove everything with <code>sql/cleanup.sql</code>.</p>
+      <pre>export SNOWFLAKE_ACCOUNT=&lt;org-account&gt;
+export SNOWFLAKE_USER=&lt;YOUR_USER&gt;
+export SNOWFLAKE_PRIVATE_KEY_PATH=~/.snowflake/keys/&lt;key&gt;.p8
+streamlit run app/streamlit_app.py</pre>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <h2>Learn more</h2>
+    <ul class="docs">
+      <li><a href="https://docs.snowflake.com/en/user-guide/snowflake-cortex/aisql">Cortex AI functions (AI_COMPLETE)</a></li>
+      <li><a href="https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-agents">Cortex Agents</a></li>
+      <li><a href="https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-analyst">Cortex Analyst</a></li>
+      <li><a href="https://docs.snowflake.com/en/user-guide/views-semantic/overview">Semantic views</a></li>
+      <li><a href="https://docs.snowflake.com/en/developer-guide/streamlit/about-streamlit">Streamlit in Snowflake</a></li>
+    </ul>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p class="disc"><b>Disclaimer.</b> All data is synthetic, generated by the repository with a fixed seed. Results such as "3 verticals gaining share" describe this synthetic data set only. The logic is illustrative and is not financial, regulatory or compliance advice. This is an example provided as-is under the Apache 2.0 license; it is not an official Snowflake product and is not supported by Snowflake Support. Review and test before any production use.</p>
+    <p>Owner: Javier Soliz · Last reviewed: November 2026 · <a href="https://github.com/sfc-gh-jsoliz/sfguide-market-share-benchmarking">Repository</a> · <a href="try/">Try it</a> · <a href="https://sfc-gh-ooral.github.io/snow-packs/">Snow Packs catalog</a></p>
+  </div>
+</footer>
+</body>
+</html>
