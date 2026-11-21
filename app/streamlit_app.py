@@ -1,123 +1,65 @@
-import json
+"""Market Share & Vertical Benchmarking on Snowflake.
+
+Run locally (Sample mode, no account):   streamlit run app/streamlit_app.py
+Live mode locally: set SNOWFLAKE_ACCOUNT, SNOWFLAKE_USER and SNOWFLAKE_PRIVATE_KEY_PATH
+(key-pair auth) and restart. In Streamlit in Snowflake the app uses its own session.
+"""
+import os
+import sys
+
 import streamlit as st
-from snowflake.snowpark.context import get_active_session
 
-st.set_page_config(page_title="Market Share Benchmarking", layout="wide")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-SCHEMA = "SNOWPACK_MARKET_SHARE.CORE"
-MODEL = "claude-sonnet-4-5"
-session = get_active_session()
-_rerun = getattr(st, "rerun", getattr(st, "experimental_rerun", lambda: None))
-BADGE = {"verified": "✅ Verified", "needs_review": "⚠️ Needs review"}
+import brand  # noqa: E402
+import data  # noqa: E402
+from views import ask, growth, notes, overview, verticals  # noqa: E402
+from views.common import theme  # noqa: E402
 
+st.set_page_config(page_title="Market Share & Vertical Benchmarking", page_icon="◔", layout="wide",
+                   initial_sidebar_state="auto")
+st.markdown(brand.CSS, unsafe_allow_html=True)
+theme()
 
-def sql_df(q, p=None):
-    df = session.sql(q, params=p or []).to_pandas()
-    df.columns = [c.lower() for c in df.columns]
-    return df
+LIVE_OK = data.live_configured()
+if "mode" not in st.session_state:
+    st.session_state.mode = "Live" if LIVE_OK else "Sample"
 
-
-def data_mode():
-    try:
-        r = session.sql(f"SELECT mode, note FROM {SCHEMA}.MARKET_SHARE_DATA_SOURCE_INFO").collect()[0]
-        return r[0], r[1]
-    except Exception:
-        return "unknown", ""
-
-
-def load_reports():
-    return sql_df(f"SELECT run_id, subject, status, edits_applied, residual_hedges, report_md, created_at FROM {SCHEMA}.MARKET_SHARE_REPORTS ORDER BY created_at DESC")
-
-
-def fact_pack():
-    return session.sql(f"""
-        WITH w AS (SELECT MIN(month_end) a, MAX(month_end) z FROM {SCHEMA}.MARKET_SHARE_BENCHMARK)
-        SELECT ARRAY_AGG(OBJECT_CONSTRUCT(
-          'category', s.category_name, 'month', s.month_end::string,
-          'processed_volume_usd', s.processed_volume_usd,
-          'market_sales_usd', s.market_sales_usd, 'share_bps', s.share_bps))
-        FROM {SCHEMA}.MARKET_SHARE_BENCHMARK s JOIN w ON s.month_end IN (w.a, w.z)
-    """).collect()[0][0]
-
-
-def draft_note(fp):
-    rules = (
-        "You are a payments-portfolio analyst. Write a concise market-share note using ONLY the FACTS JSON.\n"
-        "DATA RULES: use only numbers in FACTS, copy exactly; share_bps is basis points (100 bps = 1%); dollars are USD, express $B/$M; "
-        "share change = latest bps - earliest bps per category; no estimates, no hedging, no outside benchmarks; missing = n/d.\n"
-        "OUTPUT markdown starting with '# ', a one-line takeaway (categories gained/lost share), a table "
-        "(category | processed | market | share start->now | delta bps), 3 bullets, ending with '## Data Coverage'."
-    )
-    return session.sql("SELECT AI_COMPLETE(?, ?)", params=[MODEL, rules + f"\n\nFACTS: {fp}"]).collect()[0][0]
-
-
-def verify(fp, draft):
-    vp = (
-        "You are a fact-checker. Compare the DRAFT against the FACTS JSON (only allowed source). Return ONLY a JSON object with keys "
-        "status ('verified' if every number/claim is supported and no hedge words like likely/approximately/around/could, else 'needs_review'), "
-        "residual_hedges (int), edits (array of strings).\n\n" + f"FACTS: {fp}\n\nDRAFT:\n{draft}"
-    )
-    raw = session.sql("SELECT AI_COMPLETE(?, ?)", params=[MODEL, vp]).collect()[0][0]
-    s, e = raw.find("{"), raw.rfind("}")
-    try:
-        return json.loads(raw[s:e + 1])
-    except Exception:
-        return {"status": "needs_review", "residual_hedges": None, "edits": ["unparseable verifier output"]}
-
-
-st.title("Market Share Benchmarking")
-st.caption("A payments processor's processed volume by merchant category vs the market (US Census retail sales).")
-_mode, _note = data_mode()
-if _mode == "synthetic":
-    st.warning("Sample mode — synthetic market. " + _note)
-elif _mode == "marketplace":
-    st.info("Live market — " + _note)
-
-if "view" not in st.session_state:
-    st.session_state["view"] = "gallery"
+VIEWS = {
+    "Overview": overview.render,
+    "Verticals": verticals.render,
+    "Growth gap": growth.render,
+    "Share notes": notes.render,
+    "Ask an analyst": ask.render,
+}
 
 with st.sidebar:
-    st.subheader("Generate a note")
-    st.caption("Benchmarks the whole portfolio vs the market and writes a verified share note.")
-    if st.button("Run market-share analysis", type="primary", use_container_width=True):
-        with st.spinner("Fact pack → grounded draft → verify (~20-40s)..."):
-            fp = fact_pack()
-            draft = draft_note(fp)
-            v = verify(fp, draft)
-            status = "verified" if v.get("status") == "verified" else "needs_review"
-            session.sql(
-                f"INSERT INTO {SCHEMA}.MARKET_SHARE_REPORTS (subject, draft_md, report_md, status, edits_applied, residual_hedges) SELECT ?, ?, ?, ?, ?, ?",
-                params=["Portfolio market share", draft, draft, status, len(v.get("edits", [])), v.get("residual_hedges")],
-            ).collect()
-        st.success(f"Done — {BADGE[status]}")
-        st.session_state["view"] = "gallery"
-        _rerun()
+    st.html(f'<div class="ms-brand">{brand.LOGO_IMG}<div><b>Market Share &amp; Vertical Benchmarking</b>'
+            '<span>Payments strategy · share by merchant vertical</span></div></div>')
+    st.html('<p class="ms-eyebrow">Workspace</p>')
+    with st.container(key="nav"):
+        view = st.radio("Section", list(VIEWS), label_visibility="collapsed", key="view")
+    st.html('<p class="ms-eyebrow">Data</p>')
+    with st.container(key="modes"):
+        st.segmented_control("Data mode", ["Sample", "Live"], key="mode", label_visibility="collapsed",
+                             help="Sample: bundled synthetic data, no account. Live: the same app on Snowflake.")
+    mode = st.session_state.mode or st.session_state.get("_last_mode", "Sample")
+    st.session_state["_last_mode"] = mode
+    env = ('<span class="ms-env live"><i></i>Live · Snowflake</span>' if mode == "Live"
+           else '<span class="ms-env sample"><i></i>Sample data</span>')
+    st.html(f'<div class="ms-who"><b>Strategy analyst</b><span>Role {data.ROLE}</span><br>{env}</div>')
 
-if st.session_state["view"].startswith("report:"):
-    run_id = st.session_state["view"].split(":", 1)[1]
-    rpt = load_reports()
-    row = rpt[rpt["run_id"] == run_id]
-    if st.button("← Back to gallery"):
-        st.session_state["view"] = "gallery"
-        _rerun()
-    if not row.empty:
-        r = row.iloc[0]
-        st.markdown(f"**{BADGE.get(r['status'], r['status'])}**  &nbsp; residual hedges: {r['residual_hedges']}  |  flagged: {r['edits_applied']}")
-        st.divider()
-        st.markdown(r["report_md"])
-else:
-    reports = load_reports()
-    if reports.empty:
-        st.info("No notes yet. Use the sidebar to generate one.")
-    else:
-        cols = st.columns(3)
-        for i, (_, r) in enumerate(reports.iterrows()):
-            with cols[i % 3]:
-                c = st.container()
-                c.markdown(f"**{BADGE.get(r['status'], r['status'])}**")
-                c.markdown(f"**{r['subject']}**")
-                c.caption(f"{str(r['created_at'])[:16]} · {r['edits_applied']} flagged")
-                if c.button("Open report", key=f"open_{r['run_id']}", use_container_width=True):
-                    st.session_state["view"] = f"report:{r['run_id']}"
-                    _rerun()
-                c.markdown("---")
+if mode == "Live" and not LIVE_OK:
+    st.markdown(brand.header("Setup", "Connect Live mode",
+                             "Live mode runs this same app on Snowflake. No connection is configured, so nothing is shown instead of falling back to sample data.",
+                             "Setup needed"), unsafe_allow_html=True)
+    st.markdown("1. Run `sql/setup.sql` in a Snowsight worksheet (about 15 s on an XSMALL warehouse).\n"
+                "2. Register a key pair on your Snowflake user, then set these variables and restart:")
+    st.code("export SNOWFLAKE_ACCOUNT=<org-account>\nexport SNOWFLAKE_USER=<YOUR_USER>\n"
+            "export SNOWFLAKE_PRIVATE_KEY_PATH=~/.snowflake/keys/<your_key>.p8\n"
+            "streamlit run app/streamlit_app.py", language="bash")
+    st.markdown("Or deploy the app as Streamlit in Snowflake (README, *Deploy the app in Snowflake*). "
+                "Switch back to **Sample** to keep exploring.")
+    st.stop()
+
+VIEWS[view](mode)

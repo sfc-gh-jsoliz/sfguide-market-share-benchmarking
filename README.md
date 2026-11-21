@@ -1,89 +1,132 @@
 # Market Share & Vertical Benchmarking
 
-Benchmark a payments processor's processed volume by merchant category against the real US retail market, expressed as market share in basis points with a growth gap.
+Benchmark a payments processor's processed volume by merchant category against market retail sales, as market share in basis points with a year-over-year growth gap, and write a share note that a second AI pass fact-checks.
 
 Owner: Javier Soliz · Last reviewed: November 2026
 
+**Guide:** https://sfc-gh-jsoliz.github.io/sfguide-market-share-benchmarking/ · **Try it, no account:** https://sfc-gh-jsoliz.github.io/sfguide-market-share-benchmarking/try/
+
+![Overview: KPI tiles, the share ribbon and gainers and losers](docs/images/01-overview.png)
+
 ## What it shows
 
-A payments processor strategy / benchmarking team wants to know where it is gaining or losing share by merchant vertical — not just whether its own volume is growing. This pack benchmarks a (synthetic) processor book against real market retail sales by category and surfaces:
+A strategy or benchmarking team at a processor wants to know where it is gaining or losing share by merchant vertical, not just whether its own volume grows. The app has five screens:
 
-- A latest-month table of processed volume, market sales, and **share in basis points** per merchant category (restaurants, apparel, electronics, grocery, furniture, health).
-- A card gallery of generated share notes, each badged **Verified** or **Needs review**.
-- A Streamlit sidebar that runs the full workflow and writes a new share note grounded only in the governed benchmark data.
+| Screen | What you see | Snowflake capability |
+|---|---|---|
+| Overview | Book share in bps, processed volume, verticals gaining share, widest growth gap; the share ribbon (slope chart, start vs now); gainers and losers | `MARKET_SHARE_VERTICAL_SUMMARY` view |
+| Verticals | Sortable, filterable table with status pills; per-vertical share history, indexed growth and monthly figures | `MARKET_SHARE_BENCHMARK` view (window functions) |
+| Growth gap | Our YoY growth minus the market's, per vertical and month, with a quadrant read-out | `growth_gap_pp` in the benchmark view |
+| Share notes | A grounded note for the whole book or one vertical, badged **Verified** or **Needs review**, with its fact pack as sources; a gallery of saved notes | Cortex `AI_COMPLETE` (draft + verifier), `MARKET_SHARE_REPORTS` |
+| Ask an analyst | Plain-English questions answered from SQL, with the SQL and result rows | Cortex Agent `MARKET_SHARE_AGENT` with Cortex Analyst over the `MARKET_SHARE_SV` semantic view |
+
+Planted stories on this synthetic data set (see [data/README.md](data/README.md)): Restaurants gains 22.4 bps and Electronics loses 21.9 bps; Health and Grocery gain; Furniture and Apparel hold.
 
 ## How it works
 
-- A benchmark view joins the processor's monthly processed volume to market retail sales by category and month, computing `share_bps = processed_volume / market_sales × 10,000` and a growth gap.
-- In **DEPLOY** mode the market side is the **real, free US Census Advance Retail Sales** data from the Snowflake Marketplace "Financial Data Package". In **sample mode** the market side is fully synthetic, so no listing is required. The processor's own book is synthetic in both modes (a specific acquirer's volume has no public source).
-- The Streamlit app calls Snowflake Cortex `AI_COMPLETE` to draft a one-page share note under strict data rules (copy figures exactly, no estimates, no outside benchmarks), then a second `AI_COMPLETE` pass verifies each claim against the benchmark facts and flags the note Verified or Needs review.
-- Setup also creates a **Cortex Analyst semantic view** and a **Cortex Agent** over the benchmark data. These are explorable in Snowsight (Agents / Analyst) for natural-language questions — they are **not** called by the Streamlit app.
+- `MARKET_SHARE_BENCHMARK` joins the processor's monthly processed volume to market retail sales by category: `share_bps = processed_volume / market_sales x 10,000`, YoY growth of each with `LAG(..., 12)`, and the growth gap in percentage points. `MARKET_SHARE_VERTICAL_SUMMARY` compares 3-month average share at the start and end of the window and sets the status (Gaining at +3% or more, Losing at -3% or less).
+- **Share notes:** the app builds a fact pack of pre-formatted figures from the summary view, `AI_COMPLETE` (`claude-sonnet-4-5`) drafts the note under strict data rules, and a second `AI_COMPLETE` pass compares every figure with the fact pack. The verdict and flagged claims are saved with the note.
+- **Ask an analyst:** the app calls the Cortex Agent with `SNOWFLAKE.CORTEX.DATA_AGENT_RUN`; the agent uses Cortex Analyst over the semantic view to write and run SQL.
+- **Sample mode** reads the same seeded rows from `app/sample/` and computes the same numbers as the views; AI responses are replayed from Live runs after a 4 to 8 s staged wait and labeled *Sample AI response*. **Live mode** never falls back to sample data: a failed query shows its error.
 
 ## Prerequisites
 
-- A Snowflake account.
-- Snowflake Enterprise Edition or higher, in a region where Cortex AISQL and Cortex Agents are available.
-- A role that can `CREATE DATABASE` and `CREATE WAREHOUSE` (setup builds its own dedicated database and warehouse).
-- Snowflake Cortex available in your region (the app uses `AI_COMPLETE`; the Cortex Agent and Analyst objects also require Cortex).
-- Streamlit in Snowflake to run the app.
-- Sample mode is fully synthetic and needs no external data. DEPLOY mode uses the free, public US Census retail-sales data from the Marketplace "Financial Data Package" listing.
+- A Snowflake account (Standard edition or higher) in a region where Cortex `AI_COMPLETE` with `claude-sonnet-4-5`, Cortex Analyst and Cortex Agents are available, or with cross-region inference enabled.
+- A user who can use `ACCOUNTADMIN` once, to create the pack role `MARKET_SHARE_ROLE`; everything else runs as that role (`CREATE DATABASE`, `CREATE WAREHOUSE`, `SNOWFLAKE.CORTEX_USER`).
+- For local Live mode: Python 3.11 or 3.12 and a key pair registered on your Snowflake user.
+- Tested November 2026 with Streamlit 1.50.0, snowflake-snowpark-python 1.x, in Chromium (via Playwright).
 
-## Setup
+## Run it
 
-1. **Sample (synthetic) mode:** run [`app/setup_synthetic.sql`](app/setup_synthetic.sql). Builds every object on synthetic category data — no Marketplace listing required.
-2. **Deploy (real market) mode:** in Snowsight → Marketplace, get the free **Financial Data Package** (`SNOWFLAKE_PUBLIC_DATA_FINANCIAL_PACKAGE`), then run [`app/setup.sql`](app/setup.sql).
-3. **Deploy the app:** create the stage and the Streamlit in Snowflake **inside `SNOWPACK_MARKET_SHARE.CORE`** (upload [`app/streamlit_app.py`](app/streamlit_app.py) to a stage in that schema and `CREATE STREAMLIT` there, or create a new Streamlit in Snowsight with `SNOWPACK_MARKET_SHARE.CORE` as its location). Keeping both in this schema means [`app/teardown.sql`](app/teardown.sql) removes them with the database.
-4. **Explore the agent (optional):** Snowsight → AI & ML → Agents → **Market Share Agent**.
+### Sample mode (no account)
 
-Both scripts create the identical objects in `SNOWPACK_MARKET_SHARE.CORE`, so the app, semantic view, and agent behave the same between modes.
+Open the [hosted example](https://sfc-gh-jsoliz.github.io/sfguide-market-share-benchmarking/try/), or run the Streamlit app locally:
+
+```bash
+pip install -r app/requirements.txt
+streamlit run app/streamlit_app.py
+```
+
+### Run it live
+
+1. In a Snowsight worksheet, run [`sql/setup.sql`](sql/setup.sql) top to bottom (about 15 s on XSMALL; re-runnable).
+2. Optional: get the free **Financial Data Package** Marketplace listing and run [`sql/setup_census.sql`](sql/setup_census.sql) to benchmark against US Census Advance Retail Sales instead of the synthetic market. Re-run `sql/setup.sql` to go back.
+3. Start the app with key-pair auth and pick **Live** in the sidebar:
+
+```bash
+export SNOWFLAKE_ACCOUNT=<org-account>
+export SNOWFLAKE_USER=<YOUR_USER>
+export SNOWFLAKE_PRIVATE_KEY_PATH=~/.snowflake/keys/<your_key>.p8
+streamlit run app/streamlit_app.py
+```
+
+### Deploy the app in Snowflake
+
+Upload the `app/` folder (including `views/`, `sample/`, `environment.yml` and `.streamlit/config.toml`) to `@SNOWPACK_MARKET_SHARE.CORE.APP_STAGE/app`, then as `MARKET_SHARE_ROLE`:
+
+```sql
+CREATE STREAMLIT SNOWPACK_MARKET_SHARE.CORE.MARKET_SHARE_APP
+  FROM '@SNOWPACK_MARKET_SHARE.CORE.APP_STAGE/app'
+  MAIN_FILE = 'streamlit_app.py'
+  QUERY_WAREHOUSE = SNOWPACK_MARKET_SHARE_WH
+  RUNTIME_NAME = 'SYSTEM$WAREHOUSE_RUNTIME';
+```
+
+The app uses its own session there. Keeping it in this schema means `sql/cleanup.sql` removes it with the database. (The local Live path was verified in this build; the in-Snowflake deploy was not.)
+
+### Explore the notebook
+
+[`notebook/lab-market-share.ipynb`](notebook/lab-market-share.ipynb) walks through the benchmark, the semantic view, the fact pack, the draft and the verifier step by step.
 
 ## Objects created
 
 | Object | Type | Purpose |
 |---|---|---|
-| `SNOWPACK_MARKET_SHARE` | Database | Dedicated, isolated home for this pack |
-| `SNOWPACK_MARKET_SHARE.CORE` | Schema | Holds all tables, views, and AI objects |
-| `SNOWPACK_MARKET_SHARE_WH` | Warehouse (XSMALL) | Dedicated compute; auto-suspend 60s |
-| `MARKET_SHARE_MERCHANT_CATEGORY` | Table | Merchant-category dimension (MCC-aligned, mapped to Census variable codes) |
-| `MARKET_SHARE_PORTFOLIO_MONTHLY` | Table | Synthetic processor processed volume by category and month |
-| `MARKET_SHARE_RETAIL_SALES` | Table (sample) / View (deploy) | Market retail sales by category — synthetic in sample mode, real US Census in deploy mode |
-| `MARKET_SHARE_BENCHMARK` | View | Processor volume vs market sales: share in bps and growth gap |
-| `MARKET_SHARE_DATA_SOURCE_INFO` | View | Marker indicating synthetic vs real market mode |
-| `MARKET_SHARE_SV` | Semantic view | Governed business meaning for Cortex Analyst |
-| `MARKET_SHARE_REPORTS` | Table | Persisted generated share notes and verifier status |
-| `MARKET_SHARE_AGENT` | Cortex Agent | Natural-language Q&A over the semantic view (Snowsight only) |
-| Streamlit app | Streamlit in Snowflake | The benchmarking UI with grounded draft + verifier |
+| `MARKET_SHARE_ROLE` | Role | Pack role; owns everything below |
+| `SNOWPACK_MARKET_SHARE_WH` | Warehouse (XSMALL, auto-suspend 60 s) | Dedicated compute |
+| `SNOWPACK_MARKET_SHARE.CORE` | Database and schema | Home for the pack |
+| `MARKET_SHARE_MERCHANT_CATEGORY` | Table | Six MCC-aligned categories mapped to Census variable codes |
+| `MARKET_SHARE_PORTFOLIO_MONTHLY` | Table | Synthetic processed volume by category and month |
+| `MARKET_SHARE_RETAIL_SALES` | Table (view after `setup_census.sql`) | Market retail sales by category and month |
+| `MARKET_SHARE_BENCHMARK` | View | Share in bps, YoY growth, growth gap |
+| `MARKET_SHARE_VERTICAL_SUMMARY` | View | Start vs now share, change, status per vertical |
+| `MARKET_SHARE_DATA_SOURCE_INFO` | View | Synthetic or Census market marker |
+| `MARKET_SHARE_SV` | Semantic view | Business meaning for Cortex Analyst |
+| `MARKET_SHARE_AGENT` | Cortex Agent | Answers questions in the app and in Snowsight |
+| `MARKET_SHARE_REPORTS` | Table | Saved notes with verdict, flagged claims, fact pack, latency |
+| `APP_STAGE` | Stage | Optional Streamlit in Snowflake deploy |
 
-## Cost & time
+## Cost and time
 
-Setup runs in a few minutes on an XSMALL warehouse. Data volumes are tiny (six categories × 24 months). Costs are warehouse compute plus Cortex `AI_COMPLETE` calls when you generate or verify a share note in the app.
+- Setup: about 15 s on XSMALL. With the 60 s minimum per resume, a setup run plus a session of clicking around uses well under 0.1 warehouse credit (estimated from measured warehouse time; metering lags by hours).
+- Each share note is two `AI_COMPLETE` calls (6 to 12 s in total, measured); each question is one Cortex Agent call (14 to 26 s, measured). Both bill by tokens at the rates in the Snowflake Service Consumption Table. The 7 notes and 4 answers captured for Sample mode were the AI spend for this build.
 
 ## Customize with Cortex Code
 
-Use Cortex Code to adapt this pack to your own market-share questions. Try prompts like:
-
-- "Add two merchant categories (e.g. Sporting Goods and Building Materials) to `MARKET_SHARE_MERCHANT_CATEGORY`, map them to the right US Census variable codes, and extend the synthetic portfolio and benchmark so share in bps is computed for them too."
-- "Change the benchmark window from 24 months to 36 months and recompute the growth gap as the share change over the full window."
-- "Rewrite the grounded draft and verifier prompts in `app/streamlit_app.py` to report quarter-over-quarter share change instead of start-to-now, keeping the same copy-figures-exactly data rules."
+- "Explain this pack's data model and map `MARKET_SHARE_PORTFOLIO_MONTHLY` to my settlement tables without changing any objects. Propose least-privilege grants and a validation plan first."
+- "Add Sporting Goods and Building Materials to `MARKET_SHARE_MERCHANT_CATEGORY`, map them to the right US Census variable codes, extend `data/generate.py`, and check the Overview, Verticals and Growth gap screens in Sample and Live mode."
+- "Change the Gaining/Losing thresholds in `MARKET_SHARE_VERTICAL_SUMMARY` from 3% to a bps rule, update the Sample computation in `app/data.py` to match, and show me which verticals change status."
 
 ## Known limitations
 
-- The processor's own book is synthetic in both modes; there is no public source for a specific acquirer's processed volume.
-- The market benchmark is at category / month granularity (US Census Advance Retail Sales); no metro or SKU detail.
-- The browser Try page is a static illustration with mocked AI responses, not live inference.
-- Illustrative example only — not production-ready and not an official Snowflake product.
+- The processor's book is synthetic in both modes; there is no public source for a specific acquirer's volume. The market side is synthetic unless you run `sql/setup_census.sql`, which was not re-verified in this build (the listing was not mounted in the test account).
+- Category and month granularity only: no metro, merchant or SKU detail.
+- The verifier is itself a model. It catches figures that don't match the fact pack (one of the seven captured notes is flagged Needs review for a claim the facts don't support), but it is not a guarantee.
+- The hosted example and Sample mode replay captured AI responses for the suggested scopes and questions only; free-text questions need Live mode.
+- No dark mode.
 
 ## Cleanup
 
-Run [`app/teardown.sql`](app/teardown.sql) to drop the dedicated database and warehouse this pack created.
+Run [`sql/cleanup.sql`](sql/cleanup.sql). It drops the database (and with it the agent, semantic view, stage and any Streamlit app), the warehouse and the role, then lists anything left with `SHOW` commands. It does not touch the Marketplace listing.
 
 ## Learn more
 
-- [Snowflake Cortex AISQL (`AI_COMPLETE`)](https://docs.snowflake.com/en/user-guide/snowflake-cortex/aisql)
+- [Cortex AI functions (`AI_COMPLETE`)](https://docs.snowflake.com/en/user-guide/snowflake-cortex/aisql)
 - [Cortex Agents](https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-agents)
 - [Cortex Analyst](https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-analyst)
+- [Semantic views](https://docs.snowflake.com/en/user-guide/views-semantic/overview)
 - [Streamlit in Snowflake](https://docs.snowflake.com/en/developer-guide/streamlit/about-streamlit)
 
 ## License
 
-Apache 2.0 (see [`LICENSE`](LICENSE)). Illustrative example, as-is, not supported by Snowflake Support. This is not an official Snowflake product. Review and test before any production use.
+Apache 2.0 (see [`LICENSE`](LICENSE)). Illustrative example provided as-is, not an official Snowflake product and not supported by Snowflake Support. Synthetic data only; not financial, regulatory or compliance advice. Review and test before any production use.
