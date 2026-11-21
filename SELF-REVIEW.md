@@ -1,8 +1,8 @@
 # Self-review (v2 rebuild, November 2026)
 
-Each item from the build standard's "Before you call it done" list, the v2 addendum and every CONTRIBUTING Must and Should, checked in this build session.
+Every item in the Snow Packs v2 self-check and every CONTRIBUTING Must and Should, checked on this branch.
 
-## Build standard: before you call it done
+## Self-check before you call it done
 | Item | Result |
 |---|---|
 | Fresh clone runs in Sample (mock) mode | Pass: cloned `v2-rebuild`, every screen renders with Streamlit AppTest, no exceptions |
@@ -12,7 +12,7 @@ Each item from the build standard's "Before you call it done" list, the v2 adden
 | Dark mode | Skipped: the design is light only (see `docs/DESIGN.md`) |
 | Story beats visible in a screenshot | Pass: Restaurants gaining and Electronics losing (Overview, Growth gap), Holding verticals (Verticals), verified and flagged notes (Share notes) |
 
-## v2 addendum
+## v2 requirements
 | Item | Result |
 |---|---|
 | `docs/DESIGN.md` before UI, plain name, no coined product name | Pass |
