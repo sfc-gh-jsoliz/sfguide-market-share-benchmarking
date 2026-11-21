@@ -1,0 +1,7 @@
+name: market-share-benchmarking
+channels:
+  - snowflake
+dependencies:
+  - streamlit=1.50.0
+  - altair=5.*
+  - pandas=2.*

@@ -378,9 +378,9 @@ WITH j AS (
   JOIN MARKET_SHARE_RETAIL_SALES m USING (category_code, month_end)
 )
 SELECT category_code, category_name, month_end, processed_volume_usd, market_sales_usd,
-       ROUND(processed_volume_usd / NULLIF(market_sales_usd, 0) * 10000, 2) AS share_bps,
-       ROUND((processed_volume_usd / NULLIF(LAG(processed_volume_usd, 12) OVER (PARTITION BY category_code ORDER BY month_end), 0) - 1) * 100, 2) AS book_yoy_pct,
-       ROUND((market_sales_usd / NULLIF(LAG(market_sales_usd, 12) OVER (PARTITION BY category_code ORDER BY month_end), 0) - 1) * 100, 2) AS market_yoy_pct,
+       ROUND(processed_volume_usd::FLOAT / NULLIF(market_sales_usd, 0) * 10000, 2) AS share_bps,
+       ROUND((processed_volume_usd::FLOAT / NULLIF(LAG(processed_volume_usd, 12) OVER (PARTITION BY category_code ORDER BY month_end), 0) - 1) * 100, 2) AS book_yoy_pct,
+       ROUND((market_sales_usd::FLOAT / NULLIF(LAG(market_sales_usd, 12) OVER (PARTITION BY category_code ORDER BY month_end), 0) - 1) * 100, 2) AS market_yoy_pct,
        ROUND(book_yoy_pct - market_yoy_pct, 2) AS growth_gap_pp,
        txn_count, active_merchants
 FROM j;
