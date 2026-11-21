@@ -1,0 +1,511 @@
+{
+ "notes": {
+  "ALL": {
+   "scope": "ALL",
+   "subject": "Whole book",
+   "markdown": "# Vertical Market Share Performance (Jul 2024 – Jun 2026)\n\nRestaurants & Food Service, Health & Personal Care, and Food & Beverage Stores are gaining share while Electronics & Appliances is losing share.\n\n| Vertical | Processed (Latest Month) | Market (Latest Month) | Share Start → Now | Change | Growth Gap | Status |\n|----------|--------------------------|----------------------|-------------------|---------|------------|---------|\n| Restaurants & Food Service | $2,537.0M | $103.74B | 220.6 bps → 243.0 bps | +22.4 bps | +6.5 pp | Gaining |\n| Health & Personal Care | $596.1M | $40.62B | 139.7 bps → 145.8 bps | +6.0 bps | +2.8 pp | Gaining |\n| Food & Beverage Stores | $1,153.9M | $92.82B | 119.9 bps → 124.8 bps | +4.9 bps | +1.6 pp | Gaining |\n| Furniture & Home Furnishings | $180.0M | $11.00B | 160.4 bps → 163.6 bps | +3.3 bps | +0.8 pp | Holding |\n| Clothing & Accessories | $405.8M | $27.79B | 149.6 bps → 146.6 bps | -3.0 bps | -1.5 pp | Holding |\n| Electronics & Appliances | $130.9M | $8.37B | 179.4 bps → 157.5 bps | -21.9 bps | -7.7 pp | Losing |\n\n**What to look at next:**\n\n- Restaurants & Food Service delivered the strongest performance with +22.4 bps share gain and +11.1% book growth outpacing market growth of +4.6%\n- Electronics & Appliances requires attention with -21.9 bps share loss and -5.3% book contraction against a +2.4% growing market\n- Furniture & Home Furnishings shows resilience with +0.8% book growth in a flat market (+0.0%), translating to +3.3 bps share gain\n\n## Data coverage\nJul 2024 to Jun 2026 (share start/now are 3-month averages) | Source: SNOWPACK_MARKET_SHARE.CORE.MARKET_SHARE_VERTICAL_SUMMARY",
+   "status": "verified",
+   "edits": [],
+   "residual_hedges": 0,
+   "reason": "All claims are supported by the FACTS JSON with exact character-for-character matching of display values and accurate citations.",
+   "fact_pack": {
+    "window": "Jul 2024 to Jun 2026 (share start/now are 3-month averages)",
+    "source": "SNOWPACK_MARKET_SHARE.CORE.MARKET_SHARE_VERTICAL_SUMMARY",
+    "verticals": [
+     {
+      "book_yoy_display": "+11.1%",
+      "growth_gap_display": "+6.5 pp",
+      "latest_month": "2026-06-30",
+      "market_latest_display": "$103.74B",
+      "market_yoy_display": "+4.6%",
+      "processed_latest_display": "$2,537.0M",
+      "share_change_display": "+22.4 bps",
+      "share_now_display": "243.0 bps",
+      "share_start_display": "220.6 bps",
+      "status": "Gaining",
+      "vertical": "Restaurants & Food Service"
+     },
+     {
+      "book_yoy_display": "+6.2%",
+      "growth_gap_display": "+2.8 pp",
+      "latest_month": "2026-06-30",
+      "market_latest_display": "$40.62B",
+      "market_yoy_display": "+3.5%",
+      "processed_latest_display": "$596.1M",
+      "share_change_display": "+6.0 bps",
+      "share_now_display": "145.8 bps",
+      "share_start_display": "139.7 bps",
+      "status": "Gaining",
+      "vertical": "Health & Personal Care"
+     },
+     {
+      "book_yoy_display": "+6.2%",
+      "growth_gap_display": "+1.6 pp",
+      "latest_month": "2026-06-30",
+      "market_latest_display": "$92.82B",
+      "market_yoy_display": "+4.6%",
+      "processed_latest_display": "$1,153.9M",
+      "share_change_display": "+4.9 bps",
+      "share_now_display": "124.8 bps",
+      "share_start_display": "119.9 bps",
+      "status": "Gaining",
+      "vertical": "Food & Beverage Stores"
+     },
+     {
+      "book_yoy_display": "+0.8%",
+      "growth_gap_display": "+0.8 pp",
+      "latest_month": "2026-06-30",
+      "market_latest_display": "$11.00B",
+      "market_yoy_display": "+0.0%",
+      "processed_latest_display": "$180.0M",
+      "share_change_display": "+3.3 bps",
+      "share_now_display": "163.6 bps",
+      "share_start_display": "160.4 bps",
+      "status": "Holding",
+      "vertical": "Furniture & Home Furnishings"
+     },
+     {
+      "book_yoy_display": "+2.0%",
+      "growth_gap_display": "-1.5 pp",
+      "latest_month": "2026-06-30",
+      "market_latest_display": "$27.79B",
+      "market_yoy_display": "+3.5%",
+      "processed_latest_display": "$405.8M",
+      "share_change_display": "-3.0 bps",
+      "share_now_display": "146.6 bps",
+      "share_start_display": "149.6 bps",
+      "status": "Holding",
+      "vertical": "Clothing & Accessories"
+     },
+     {
+      "book_yoy_display": "-5.3%",
+      "growth_gap_display": "-7.7 pp",
+      "latest_month": "2026-06-30",
+      "market_latest_display": "$8.37B",
+      "market_yoy_display": "+2.4%",
+      "processed_latest_display": "$130.9M",
+      "share_change_display": "-21.9 bps",
+      "share_now_display": "157.5 bps",
+      "share_start_display": "179.4 bps",
+      "status": "Losing",
+      "vertical": "Electronics & Appliances"
+     }
+    ]
+   },
+   "model": "claude-sonnet-4-5",
+   "latency_ms": 9166
+  },
+  "RESTAURANTS": {
+   "scope": "RESTAURANTS",
+   "subject": "Restaurants & Food Service",
+   "markdown": "# Market Share Performance by Vertical\n\nRestaurants & Food Service is gaining share.\n\n| Vertical | Processed (Latest Month) | Market (Latest Month) | Share Start → Now | Change | Growth Gap | Status |\n|----------|--------------------------|----------------------|-------------------|--------|------------|---------|\n| Restaurants & Food Service | $2,537.0M | $103.74B | 220.6 bps → 243.0 bps | +22.4 bps | +6.5 pp | Gaining |\n\n**What to look at next:**\n\n* Monitor whether Restaurants & Food Service can sustain the +11.1% book growth rate and +6.5 pp growth gap over the next quarter\n* Identify which sub-segments within Restaurants & Food Service are driving the 22.4 bps share expansion\n* Track competitive positioning as the vertical approaches 250 bps market share threshold\n\n## Data coverage\nJul 2024 to Jun 2026 (share start/now are 3-month averages), from SNOWPACK_MARKET_SHARE.CORE.MARKET_SHARE_VERTICAL_SUMMARY",
+   "status": "verified",
+   "edits": [],
+   "residual_hedges": 0,
+   "reason": "The draft omits the book_yoy_display (+11.1%) and market_yoy_display (+4.6%) figures from the table, but these figures are correctly cited in the recommendations section.",
+   "fact_pack": {
+    "window": "Jul 2024 to Jun 2026 (share start/now are 3-month averages)",
+    "source": "SNOWPACK_MARKET_SHARE.CORE.MARKET_SHARE_VERTICAL_SUMMARY",
+    "verticals": [
+     {
+      "book_yoy_display": "+11.1%",
+      "growth_gap_display": "+6.5 pp",
+      "latest_month": "2026-06-30",
+      "market_latest_display": "$103.74B",
+      "market_yoy_display": "+4.6%",
+      "processed_latest_display": "$2,537.0M",
+      "share_change_display": "+22.4 bps",
+      "share_now_display": "243.0 bps",
+      "share_start_display": "220.6 bps",
+      "status": "Gaining",
+      "vertical": "Restaurants & Food Service"
+     }
+    ]
+   },
+   "model": "claude-sonnet-4-5",
+   "latency_ms": 6680
+  },
+  "GROCERY": {
+   "scope": "GROCERY",
+   "subject": "Food & Beverage Stores",
+   "markdown": "# Payments Portfolio Market Share Performance\n\nFood & Beverage Stores is gaining share while no verticals are losing.\n\n| Vertical | Processed (Latest Month) | Market (Latest Month) | Share Start → Now | Change | Growth Gap | Status |\n|----------|-------------------------|----------------------|-------------------|--------|------------|--------|\n| Food & Beverage Stores | $1,153.9M | $92.82B | 119.9 bps → 124.8 bps | +4.9 bps | +1.6 pp | Gaining |\n\n**What to look at next:**\n\n- Monitor whether the +1.6 pp growth advantage in Food & Beverage Stores continues beyond Jun 2026, as the vertical processed +6.2% YoY versus market +4.6% YoY\n- Track quarterly share progression to assess momentum stability in Food & Beverage Stores after the 4.9 bps gain\n- Evaluate if other verticals show similar gaining patterns or if Food & Beverage Stores represents an isolated opportunity\n\n## Data coverage\nJul 2024 to Jun 2026 (share start/now are 3-month averages) | Source: SNOWPACK_MARKET_SHARE.CORE.MARKET_SHARE_VERTICAL_SUMMARY",
+   "status": "verified",
+   "edits": [],
+   "residual_hedges": 0,
+   "reason": "All claims are supported by the FACTS JSON with exact figure matches and no hedging language.",
+   "fact_pack": {
+    "window": "Jul 2024 to Jun 2026 (share start/now are 3-month averages)",
+    "source": "SNOWPACK_MARKET_SHARE.CORE.MARKET_SHARE_VERTICAL_SUMMARY",
+    "verticals": [
+     {
+      "book_yoy_display": "+6.2%",
+      "growth_gap_display": "+1.6 pp",
+      "latest_month": "2026-06-30",
+      "market_latest_display": "$92.82B",
+      "market_yoy_display": "+4.6%",
+      "processed_latest_display": "$1,153.9M",
+      "share_change_display": "+4.9 bps",
+      "share_now_display": "124.8 bps",
+      "share_start_display": "119.9 bps",
+      "status": "Gaining",
+      "vertical": "Food & Beverage Stores"
+     }
+    ]
+   },
+   "model": "claude-sonnet-4-5",
+   "latency_ms": 7492
+  },
+  "HEALTH": {
+   "scope": "HEALTH",
+   "subject": "Health & Personal Care",
+   "markdown": "# Market Share Performance by Vertical\n\nHealth & Personal Care is gaining share with a +2.8 pp growth gap.\n\n| Vertical | Processed (Latest Month) | Market (Latest Month) | Share Start → Now | Change | Growth Gap | Status |\n|----------|--------------------------|----------------------|-------------------|--------|------------|---------|\n| Health & Personal Care | $596.1M | $40.62B | 139.7 bps → 145.8 bps | +6.0 bps | +2.8 pp | Gaining |\n\n**What to look at next:**\n\n- Monitor whether the +6.2% book growth can be sustained above the +3.5% market growth rate through the remainder of 2026\n- Identify which merchant segments or programs within Health & Personal Care are driving the +2.8 pp growth gap\n- Track monthly share progression to confirm the 145.8 bps level represents a stable new baseline versus seasonal strength\n\n## Data coverage\nJul 2024 to Jun 2026, from SNOWPACK_MARKET_SHARE.CORE.MARKET_SHARE_VERTICAL_SUMMARY",
+   "status": "verified",
+   "edits": [],
+   "residual_hedges": 0,
+   "reason": "All claims are directly supported by the FACTS JSON with exact character-for-character matches on display values, and recommendations cite only FACTS figures.",
+   "fact_pack": {
+    "window": "Jul 2024 to Jun 2026 (share start/now are 3-month averages)",
+    "source": "SNOWPACK_MARKET_SHARE.CORE.MARKET_SHARE_VERTICAL_SUMMARY",
+    "verticals": [
+     {
+      "book_yoy_display": "+6.2%",
+      "growth_gap_display": "+2.8 pp",
+      "latest_month": "2026-06-30",
+      "market_latest_display": "$40.62B",
+      "market_yoy_display": "+3.5%",
+      "processed_latest_display": "$596.1M",
+      "share_change_display": "+6.0 bps",
+      "share_now_display": "145.8 bps",
+      "share_start_display": "139.7 bps",
+      "status": "Gaining",
+      "vertical": "Health & Personal Care"
+     }
+    ]
+   },
+   "model": "claude-sonnet-4-5",
+   "latency_ms": 6439
+  },
+  "FURNITURE": {
+   "scope": "FURNITURE",
+   "subject": "Furniture & Home Furnishings",
+   "markdown": "# Market Share Performance by Vertical\n\nFurniture & Home Furnishings gained share while no verticals lost share in this period.\n\n| Vertical | Processed (Latest Month) | Market (Latest Month) | Share Start → Now | Change | Growth Gap | Status |\n|----------|--------------------------|----------------------|-------------------|--------|------------|---------|\n| Furniture & Home Furnishings | $180.0M | $11.00B | 160.4 bps → 163.6 bps | +3.3 bps | +0.8 pp | Holding |\n\n**What to look at next:**\n\n- Monitor whether Furniture & Home Furnishings can sustain its +0.8 pp growth advantage over the flat market backdrop\n- Investigate drivers behind the share gain trajectory from 160.4 bps to 163.6 bps over the measurement window\n- Expand vertical coverage to identify additional segments contributing to or detracting from overall portfolio performance\n\n## Data coverage\n\nJul 2024 to Jun 2026 (share start/now are 3-month averages) | Source: SNOWPACK_MARKET_SHARE.CORE.MARKET_SHARE_VERTICAL_SUMMARY",
+   "status": "needs_review",
+   "edits": [
+    "Claim that 'no verticals lost share in this period' is unsupported (only one vertical provided in FACTS)"
+   ],
+   "residual_hedges": 0,
+   "reason": "The claim that no verticals lost share is unsupported because only one vertical is shown in the data, making it impossible to verify whether other verticals lost share.",
+   "fact_pack": {
+    "window": "Jul 2024 to Jun 2026 (share start/now are 3-month averages)",
+    "source": "SNOWPACK_MARKET_SHARE.CORE.MARKET_SHARE_VERTICAL_SUMMARY",
+    "verticals": [
+     {
+      "book_yoy_display": "+0.8%",
+      "growth_gap_display": "+0.8 pp",
+      "latest_month": "2026-06-30",
+      "market_latest_display": "$11.00B",
+      "market_yoy_display": "+0.0%",
+      "processed_latest_display": "$180.0M",
+      "share_change_display": "+3.3 bps",
+      "share_now_display": "163.6 bps",
+      "share_start_display": "160.4 bps",
+      "status": "Holding",
+      "vertical": "Furniture & Home Furnishings"
+     }
+    ]
+   },
+   "model": "claude-sonnet-4-5",
+   "latency_ms": 6947
+  },
+  "APPAREL": {
+   "scope": "APPAREL",
+   "subject": "Clothing & Accessories",
+   "markdown": "# Portfolio Market Share Summary\n\nClothing & Accessories is losing share with a -1.5 pp growth gap.\n\n| Vertical | Processed (Latest Month) | Market (Latest Month) | Share Start → Now | Change | Growth Gap | Status |\n|----------|--------------------------|----------------------|-------------------|---------|------------|--------|\n| Clothing & Accessories | $405.8M | $27.79B | 149.6 bps → 146.6 bps | -3.0 bps | -1.5 pp | Holding |\n\n**What to look at next:**\n- Investigate why book growth of +2.0% trails market growth of +3.5% in Clothing & Accessories\n- Review the -3.0 bps share decline trend to determine if \"Holding\" status requires intervention\n- Assess competitive dynamics driving the -1.5 pp growth gap in this vertical\n\n## Data coverage\nJul 2024 to Jun 2026 (share start/now are 3-month averages) | Source: SNOWPACK_MARKET_SHARE.CORE.MARKET_SHARE_VERTICAL_SUMMARY",
+   "status": "verified",
+   "edits": [],
+   "residual_hedges": 0,
+   "reason": "All claims are fully supported by the FACTS JSON with exact figure matches and no hedging language.",
+   "fact_pack": {
+    "window": "Jul 2024 to Jun 2026 (share start/now are 3-month averages)",
+    "source": "SNOWPACK_MARKET_SHARE.CORE.MARKET_SHARE_VERTICAL_SUMMARY",
+    "verticals": [
+     {
+      "book_yoy_display": "+2.0%",
+      "growth_gap_display": "-1.5 pp",
+      "latest_month": "2026-06-30",
+      "market_latest_display": "$27.79B",
+      "market_yoy_display": "+3.5%",
+      "processed_latest_display": "$405.8M",
+      "share_change_display": "-3.0 bps",
+      "share_now_display": "146.6 bps",
+      "share_start_display": "149.6 bps",
+      "status": "Holding",
+      "vertical": "Clothing & Accessories"
+     }
+    ]
+   },
+   "model": "claude-sonnet-4-5",
+   "latency_ms": 6086
+  },
+  "ELECTRONICS": {
+   "scope": "ELECTRONICS",
+   "subject": "Electronics & Appliances",
+   "markdown": "# Market Share Performance: Electronics & Appliances\n\nElectronics & Appliances is losing share with a decline of -21.9 bps driven by a -7.7 pp growth gap to market.\n\n| Vertical | Processed (latest month) | Market (latest month) | Share start → now | Change | Growth gap | Status |\n|----------|-------------------------|----------------------|-------------------|---------|------------|--------|\n| Electronics & Appliances | $130.9M | $8.37B | 179.4 bps → 157.5 bps | -21.9 bps | -7.7 pp | Losing |\n\n**What to look at next:**\n- Investigate the drivers of -5.3% book YoY decline against +2.4% market growth in Electronics & Appliances\n- Analyze merchant retention and new merchant acquisition patterns to understand the -21.9 bps share erosion\n- Review pricing, product capabilities, and competitive positioning to close the -7.7 pp growth gap\n\n## Data coverage\nJul 2024 to Jun 2026 (share start/now are 3-month averages) | Source: SNOWPACK_MARKET_SHARE.CORE.MARKET_SHARE_VERTICAL_SUMMARY",
+   "status": "verified",
+   "edits": [],
+   "residual_hedges": 0,
+   "reason": "All claims are supported by the FACTS JSON with exact figure matches and no hedging language.",
+   "fact_pack": {
+    "window": "Jul 2024 to Jun 2026 (share start/now are 3-month averages)",
+    "source": "SNOWPACK_MARKET_SHARE.CORE.MARKET_SHARE_VERTICAL_SUMMARY",
+    "verticals": [
+     {
+      "book_yoy_display": "-5.3%",
+      "growth_gap_display": "-7.7 pp",
+      "latest_month": "2026-06-30",
+      "market_latest_display": "$8.37B",
+      "market_yoy_display": "+2.4%",
+      "processed_latest_display": "$130.9M",
+      "share_change_display": "-21.9 bps",
+      "share_now_display": "157.5 bps",
+      "share_start_display": "179.4 bps",
+      "status": "Losing",
+      "vertical": "Electronics & Appliances"
+     }
+    ]
+   },
+   "model": "claude-sonnet-4-5",
+   "latency_ms": 6367
+  }
+ },
+ "ask": {
+  "Which merchant categories gained the most market share between July 2024 and June 2026?": {
+   "text": "Restaurants & Food Service gained the most market share from July 2024 to June 2026, by a wide margin. Its share rose 25.9 bps, from 218.7 to 244.6 bps (+11.8%). Share is measured month-end to month-end (Jul 31, 2024 vs Jun 30, 2026).\n\n**Categories that gained share:**\n1. **Restaurants & Food Service:** +25.9 bps\n2. **Health & Personal Care:** +6.9 bps, from 139.9 to 146.7\n3. **Food & Beverage Stores:** +4.4 bps, from 119.9 to 124.3\n4. **Furniture & Home Furnishings:** +3.5 bps, from 160.1 to 163.6\n\n**Categories that lost share:**\n- **Electronics & Appliances** fell the most, down 24.3 bps from 180.8 to 156.4 (−13.5%). It went from the second-largest category to fourth.\n- **Clothing & Accessories** fell slightly, down 3.2 bps.",
+   "sql": "WITH __ms AS (\n  SELECT\n    category_name,\n    month_end,\n    share_bps\n  FROM SNOWPACK_MARKET_SHARE.CORE.MARKET_SHARE_BENCHMARK\n), s AS (\n  SELECT\n    category_name,\n    month_end,\n    share_bps\n  FROM __ms\n  WHERE\n    month_end IN (\n      SELECT\n        MIN(month_end)\n      FROM __ms\n      WHERE\n        month_end >= '2024-07-01' AND month_end < '2024-08-01'\n    )\n    OR month_end IN (\n      SELECT\n        MAX(month_end)\n      FROM __ms\n      WHERE\n        month_end >= '2026-06-01' AND month_end < '2026-07-01'\n    )\n)\nSELECT\n  a.category_name,\n  a.month_end AS start_month,\n  a.share_bps AS start_share_bps,\n  b.month_end AS end_month,\n  b.share_bps AS end_share_bps,\n  b.share_bps - a.share_bps AS change_bps,\n  (\n    b.share_bps - a.share_bps\n  ) / NULLIF(NULLIF(a.share_bps, 0), 0) AS pct_change\nFROM s AS a\nJOIN s AS b\n  ON a.category_name = b.category_name\n  AND a.month_end < '2025-01-01'\n  AND b.month_end > '2026-01-01'\nORDER BY\n  change_bps DESC NULLS LAST /* Generated by Cortex */;",
+   "table": {
+    "columns": [
+     "CATEGORY_NAME",
+     "START_MONTH",
+     "START_SHARE_BPS",
+     "END_MONTH",
+     "END_SHARE_BPS",
+     "CHANGE_BPS",
+     "PCT_CHANGE"
+    ],
+    "rows": [
+     [
+      "Restaurants & Food Service",
+      "2024-07-31",
+      "218.68000000000001",
+      "2026-06-30",
+      "244.55000000000001",
+      "25.870000000000005",
+      "0.11830071337113593"
+     ],
+     [
+      "Health & Personal Care",
+      "2024-07-31",
+      "139.87",
+      "2026-06-30",
+      "146.74000000000001",
+      "6.8700000000000045",
+      "0.049117037248873986"
+     ],
+     [
+      "Food & Beverage Stores",
+      "2024-07-31",
+      "119.94",
+      "2026-06-30",
+      "124.31999999999999",
+      "4.3799999999999955",
+      "0.036518259129564745"
+     ],
+     [
+      "Furniture & Home Furnishings",
+      "2024-07-31",
+      "160.13",
+      "2026-06-30",
+      "163.61000000000001",
+      "3.4800000000000182",
+      "0.021732342471741824"
+     ],
+     [
+      "Clothing & Accessories",
+      "2024-07-31",
+      "149.18000000000001",
+      "2026-06-30",
+      "145.99000000000001",
+      "-3.1899999999999977",
+      "-0.021383563480359281"
+     ],
+     [
+      "Electronics & Appliances",
+      "2024-07-31",
+      "180.77000000000001",
+      "2026-06-30",
+      "156.44",
+      "-24.330000000000013",
+      "-0.13459091663439737"
+     ]
+    ]
+   },
+   "question": "Which merchant categories gained the most market share between July 2024 and June 2026?",
+   "latency_ms": 14133
+  },
+  "What was our average share in basis points by merchant category in 2026?": {
+   "text": "The 2026 data runs from January to June 2026, which is six months for each category. Across that period, your average share was highest in **Restaurants & Food Service at about 241 bps (2.41%)** and lowest in **Food & Beverage Stores at about 125 bps (1.25%)**.\n\n- Furniture & Home Furnishings (~163 bps), Electronics & Appliances (~159 bps), Clothing & Accessories (~147 bps) and Health & Personal Care (~145 bps) fall between those two, in a narrow range.\n- These are simple averages of the monthly share figures. They aren't weighted by each month's market sales.",
+   "sql": "WITH __ms AS (\n  SELECT\n    category_name,\n    month_end,\n    share_bps\n  FROM SNOWPACK_MARKET_SHARE.CORE.MARKET_SHARE_BENCHMARK\n)\nSELECT\n  category_name,\n  AVG(share_bps) AS avg_share_bps,\n  COUNT(*) AS months,\n  MIN(month_end) AS start_month,\n  MAX(month_end) AS end_month\nFROM __ms\nWHERE\n  YEAR(month_end) = 2026\nGROUP BY\n  category_name\nORDER BY\n  avg_share_bps DESC NULLS LAST /* Generated by Cortex */;",
+   "table": {
+    "columns": [
+     "CATEGORY_NAME",
+     "AVG_SHARE_BPS",
+     "MONTHS",
+     "START_MONTH",
+     "END_MONTH"
+    ],
+    "rows": [
+     [
+      "Restaurants & Food Service",
+      "241.46666666666667",
+      "6",
+      "2026-01-31",
+      "2026-06-30"
+     ],
+     [
+      "Furniture & Home Furnishings",
+      "163.32500000000002",
+      "6",
+      "2026-01-31",
+      "2026-06-30"
+     ],
+     [
+      "Electronics & Appliances",
+      "158.98666666666665",
+      "6",
+      "2026-01-31",
+      "2026-06-30"
+     ],
+     [
+      "Clothing & Accessories",
+      "146.94",
+      "6",
+      "2026-01-31",
+      "2026-06-30"
+     ],
+     [
+      "Health & Personal Care",
+      "145.32666666666668",
+      "6",
+      "2026-01-31",
+      "2026-06-30"
+     ],
+     [
+      "Food & Beverage Stores",
+      "124.65499999999999",
+      "6",
+      "2026-01-31",
+      "2026-06-30"
+     ]
+    ]
+   },
+   "question": "What was our average share in basis points by merchant category in 2026?",
+   "latency_ms": 25748
+  },
+  "Which category had the widest negative growth gap in June 2026?": {
+   "text": "**Electronics & Appliances** had the widest negative growth gap in June 2026 (month ending 2026-06-30), at **−7.67 pp**. Its processed volume fell 5.32% from June 2025, while the market grew 2.35%. Its market share was 156.44 bps (about 1.56%).\n\nClothing & Accessories was the only other category to grow more slowly than its market (−1.47 pp). The other four categories grew faster than their markets, led by Restaurants & Food Service at +6.50 pp.",
+   "sql": "WITH __ms AS (\n  SELECT\n    category_name,\n    month_end,\n    book_yoy_pct,\n    growth_gap_pp,\n    market_yoy_pct,\n    share_bps\n  FROM SNOWPACK_MARKET_SHARE.CORE.MARKET_SHARE_BENCHMARK\n)\nSELECT\n  category_name,\n  month_end,\n  book_yoy_pct,\n  market_yoy_pct,\n  growth_gap_pp,\n  share_bps\nFROM __ms\nWHERE\n  month_end >= '2026-06-01' AND month_end < '2026-07-01'\nORDER BY\n  growth_gap_pp ASC /* Generated by Cortex */;",
+   "table": {
+    "columns": [
+     "CATEGORY_NAME",
+     "MONTH_END",
+     "BOOK_YOY_PCT",
+     "MARKET_YOY_PCT",
+     "GROWTH_GAP_PP",
+     "SHARE_BPS"
+    ],
+    "rows": [
+     [
+      "Electronics & Appliances",
+      "2026-06-30",
+      "-5.3200000000000003",
+      "2.3500000000000001",
+      "-7.6699999999999999",
+      "156.44"
+     ],
+     [
+      "Clothing & Accessories",
+      "2026-06-30",
+      "2.0099999999999998",
+      "3.48",
+      "-1.47",
+      "145.99000000000001"
+     ],
+     [
+      "Furniture & Home Furnishings",
+      "2026-06-30",
+      "0.77000000000000002",
+      "0",
+      "0.77000000000000002",
+      "163.61000000000001"
+     ],
+     [
+      "Food & Beverage Stores",
+      "2026-06-30",
+      "6.21",
+      "4.5999999999999996",
+      "1.6100000000000001",
+      "124.31999999999999"
+     ],
+     [
+      "Health & Personal Care",
+      "2026-06-30",
+      "6.2400000000000002",
+      "3.48",
+      "2.7599999999999998",
+      "146.74000000000001"
+     ],
+     [
+      "Restaurants & Food Service",
+      "2026-06-30",
+      "11.1",
+      "4.5999999999999996",
+      "6.5",
+      "244.55000000000001"
+     ]
+    ]
+   },
+   "question": "Which category had the widest negative growth gap in June 2026?",
+   "latency_ms": 13728
+  },
+  "How much did total processed volume grow from June 2025 to June 2026?": {
+   "text": "Total processed volume grew by **$357.9M, or about 7.7%**, from June 2025 to June 2026. It went from **$4.65B** in the month ending June 30, 2025 to **$5.00B** in the month ending June 30, 2026.\n\nBoth months include the same 6 merchant categories, so the two totals can be compared directly.",
+   "sql": "WITH __ms AS (\n  SELECT\n    category_code,\n    month_end,\n    processed_volume_usd\n  FROM SNOWPACK_MARKET_SHARE.CORE.MARKET_SHARE_BENCHMARK\n), m AS (\n  SELECT\n    month_end,\n    SUM(processed_volume_usd) AS vol,\n    COUNT(DISTINCT category_code) AS cats\n  FROM __ms\n  WHERE\n    DATE_TRUNC('MONTH', month_end) IN ('2025-06-01', '2026-06-01')\n  GROUP BY\n    month_end\n)\nSELECT\n  p.month_end AS prev_month,\n  c.month_end AS curr_month,\n  p.vol AS prev_volume_usd,\n  c.vol AS curr_volume_usd,\n  c.vol - p.vol AS change_usd,\n  (\n    c.vol - p.vol\n  ) / NULLIF(NULLIF(p.vol, 0), 0) AS pct_change,\n  p.cats AS prev_categories,\n  c.cats AS curr_categories\nFROM m AS c\nJOIN m AS p\n  ON YEAR(c.month_end) = 2026 AND YEAR(p.month_end) = 2025 /* Generated by Cortex */;",
+   "table": {
+    "columns": [
+     "PREV_MONTH",
+     "CURR_MONTH",
+     "PREV_VOLUME_USD",
+     "CURR_VOLUME_USD",
+     "CHANGE_USD",
+     "PCT_CHANGE",
+     "PREV_CATEGORIES",
+     "CURR_CATEGORIES"
+    ],
+    "rows": [
+     [
+      "2025-06-30",
+      "2026-06-30",
+      "4645776613",
+      "5003669890",
+      "357893277",
+      "0.077036",
+      "6",
+      "6"
+     ]
+    ]
+   },
+   "question": "How much did total processed volume grow from June 2025 to June 2026?",
+   "latency_ms": 14753
+  }
+ }
+}
